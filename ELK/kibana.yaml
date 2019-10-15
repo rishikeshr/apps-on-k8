@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana-assignment
+  labels:
+    app: kibana-assignment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kibana-assignment
+  template:
+    metadata:
+      labels:
+        app: kibana-assignment
+    spec:
+      containers:
+      - name: kibana-assignment
+        image: docker.elastic.co/kibana/kibana:6.5.4
+        env:
+          - name: ELASTICSEARCH_URL
+            value: http://elasticsearch:9200
+          - name: XPACK_SECURITY_ENABLED
+            value: "true"
+        ports:
+        - containerPort: 5601
+          name: kibana-int
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kibana-assignment
+  labels:
+    app: kibana-assignment
+spec:
+  selector:
+    app: kibana-assignment
+  ports:
+  - port: 5601
+    protocol: TCP
+    targetPort: kibana-int
+  type: LoadBalancer
+
