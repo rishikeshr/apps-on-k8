@@ -81,12 +81,21 @@ spec:
               configMapKeyRef:
                   name: elastic-assignment-config
                   key: ES_JAVA_OPTS
-        readinessProbe:
-          httpGet:
-            scheme: HTTP
-            path: /_cluster/health?local=true
-            port: 9200
-          initialDelaySeconds: 5
+          readinessProbe:
+           httpGet:
+             scheme: HTTP
+             path: /
+             port: 9200
+           initialDelaySeconds: 5
+           timeoutSeconds: 5
+           successThreshold: 3
+         livenessProbe:
+           httpGet:
+             path: /_cluster/health
+             port: 9200
+             scheme: HTTP
+           initialDelaySeconds: 360
+           timeoutSeconds: 2
         ports:
         - containerPort: 9200
           name: elastic-http

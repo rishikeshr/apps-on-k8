@@ -84,9 +84,18 @@ spec:
         readinessProbe:
           httpGet:
             scheme: HTTP
-            path: /_cluster/health?local=true
+            path: /
             port: 9200
           initialDelaySeconds: 5
+          timeoutSeconds: 5
+          successThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /_cluster/health
+            port: 9200
+            scheme: HTTP
+          initialDelaySeconds: 360
+          timeoutSeconds: 2
         ports:
         - containerPort: 9200
           name: elastic-http
